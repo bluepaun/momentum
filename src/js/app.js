@@ -1,1 +1,5 @@
-alert("Hello world!");
+let test = 1;
+
+if (test === 1) {
+  console.log("hello");
+}
