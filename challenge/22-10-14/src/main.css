@@ -1,0 +1,13 @@
+body {
+  background-color: purple;
+  color: white;
+  transition: background-color 1s ease-in-out;
+}
+
+body.small {
+  background-color: cornflowerblue;
+}
+
+body.big {
+  background-color: palegoldenrod;
+}
