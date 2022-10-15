@@ -1,5 +1,7 @@
-let test = 1;
+//views
+import welcomeSection from "./views/welcome";
 
-if (test === 1) {
-  console.log("hello");
-}
+//models
+
+console.dir(welcomeSection);
+welcomeSection.showAssign(true);
