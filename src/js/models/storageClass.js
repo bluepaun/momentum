@@ -2,11 +2,11 @@
 
 export default class {
   constructor(keyname) {
-    this.keyname = keyname;
+    this._keyname = keyname;
   }
 
   saveData(data) {
-    localStorage.setItem(this.keyname, JSON.stringify(data));
+    localStorage.setItem(this._keyname, JSON.stringify(data));
   }
 
   loadData() {
