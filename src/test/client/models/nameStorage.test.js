@@ -1,8 +1,6 @@
 import "./localStorage_setup";
 import nameStorage from "models/nameStorage";
 
-global.localStorage = new LocalStorageMock();
-
 test("nameStorage save test", () => {
   nameStorage.saveName("testname");
   expect(localStorage.getItem("username")).toBe(JSON.stringify("testname"));
