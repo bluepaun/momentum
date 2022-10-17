@@ -9,5 +9,7 @@ const htmlData = fs.readFileSync(
 
 const dom = new JSDOM(htmlData);
 
+/* const testsubmit = new dom.SubmitEvent("submit"); */
+
 global.window = dom.window;
 global.document = dom.window.document;
