@@ -72,7 +72,7 @@
 
 .flip-top-mid-ani {
   transform-origin: 50% calc(100% + 0.05rem);
-  animation: filpTopMid 0.2s linear forwards;
+  animation: filpTopMid 0.1s linear forwards;
 }
 
 @keyframes filpMidBot {
@@ -102,9 +102,9 @@
 
 .flip-mid-bot-ani {
   transform-origin: 50% -0.1rem;
-  animation: filpMidBot calc(0.2s + 0.4s) linear forwards;
+  animation: filpMidBot calc(0.1s + 0.2s) linear forwards;
   transform: rotateX(90deg);
-  animation-delay: 0.2s;
+  animation-delay: 0.1s;
 }
 
 .clock {
