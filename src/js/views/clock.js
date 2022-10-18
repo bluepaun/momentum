@@ -35,9 +35,9 @@ class TimeSegment {
     this.topHalf.classList.add(this._FLIP_TOP_MID_ANI);
     this.botHalf.classList.add(this._FLIP_MID_BOT_ANI);
     this.botHalf.onanimationend = (event) => {
+      this.updateSegNum(this.prev);
       this.topHalf.classList.remove(this._FLIP_TOP_MID_ANI);
       this.botHalf.classList.remove(this._FLIP_MID_BOT_ANI);
-      this.updateSegNum(this.prev);
     };
   }
 }
