@@ -4,6 +4,8 @@ import clockDisplay from "./views/clock";
 
 //models
 import nameStorage from "./models/nameStorage";
+import getQuote from "./models/quote";
+import "./models/background";
 
 if (nameStorage.loadName()) {
   welcomeSection.showWelcome(true, nameStorage.loadName());
@@ -18,8 +20,6 @@ function showClock() {
   clockDisplay.setSeconds(date.getSeconds());
 }
 
-setInterval(() => {
-  showClock();
-}, 1000);
+setInterval(showClock, 1000);
 
 showClock();
