@@ -13,6 +13,12 @@ if (nameStorage.loadName()) {
   welcomeSection.showAssign(true);
 }
 
+welcomeSection.setcallback("assigned", (name) => {
+  nameStorage.saveName(name);
+  welcomeSection.showAssign(false);
+  welcomeSection.showWelcome(true, nameStorage.loadName());
+});
+
 function showClock() {
   const date = new Date();
   clockDisplay.setHours(date.getHours());

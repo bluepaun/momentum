@@ -21,6 +21,14 @@ if (_nameStorage.default.loadName()) {
   _welcome.default.showAssign(true);
 }
 
+_welcome.default.setcallback("assigned", name => {
+  _nameStorage.default.saveName(name);
+
+  _welcome.default.showAssign(false);
+
+  _welcome.default.showWelcome(true, _nameStorage.default.loadName());
+});
+
 function showClock() {
   const date = new Date();
 
@@ -70,9 +78,9 @@ async function setBackground() {
     urls.forEach(url => {
       const div = document.createElement("div");
       const img = document.createElement("img");
+      background.appendChild(div);
       img.src = url;
       div.appendChild(img);
-      background.appendChild(div);
     });
   }
 
@@ -278,7 +286,7 @@ const welcomeTitle = welcomeSection.querySelector("h1");
 const showWelcome = (on, name) => {
   if (on && name) {
     welcomeSection.classList.remove(HIDDEN_CLASSNAME);
-    welcomeTitle.innerText = `Welcome ${name}`;
+    welcomeTitle.innerText = `Welcome, ${name}`;
   } else {
     welcomeSection.classList.add(HIDDEN_CLASSNAME);
   }
@@ -287,10 +295,6 @@ const showWelcome = (on, name) => {
 const assignSection = document.querySelector(".assign");
 const assignForm = assignSection.querySelector("form");
 const assignInput = assignForm.querySelector("input");
-
-assignForm.mycallback = name => {
-  callbacks.assigned(name);
-};
 
 const showAssign = on => {
   if (on) {
@@ -302,10 +306,9 @@ const showAssign = on => {
 
 assignForm.addEventListener("submit", event => {
   event.preventDefault();
-  const target = event.target;
   const name = assignInput.value;
   assignInput.value = "";
-  target.mycallback(name);
+  callbacks.assigned(name);
 });
 
 const setcallback = (callbackName, func) => {

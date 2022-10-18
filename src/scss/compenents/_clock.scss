@@ -1,17 +1,18 @@
 .segment-display {
   background-color: black;
-  width: 2.5rem;
-  height: 4rem;
+  width: 6rem;
+  height: 9rem;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 0.1rem;
   padding: 0.3rem;
+  border-radius: 1em;
 
   & > div {
     position: relative;
     transform-style: preserve-3d;
-    transform: perspective(6rem);
+    transform: perspective(10rem);
     &.segment-top {
       transform-origin: 50% calc(100% + 0.05rem);
     }
@@ -29,7 +30,7 @@
       & > div {
         font-weight: 600;
         position: absolute;
-        font-size: 3em;
+        font-size: 6em;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -41,6 +42,9 @@
 
   .segment-top {
     & > div {
+      border-top-right-radius: 1em;
+      border-top-left-radius: 1em;
+      overflow: hidden;
       & > div {
         top: calc(50% + 0.05rem);
         left: 50%;
@@ -50,6 +54,9 @@
   }
   .segment-bot {
     & > div {
+      border-bottom-right-radius: 1em;
+      border-bottom-left-radius: 1em;
+      overflow: hidden;
       & > div {
         top: -50%;
         left: 50%;
@@ -103,12 +110,16 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  height: 6em;
+  margin-top: 10%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1em;
+  border-radius: 1rem;
   & > div {
     display: flex;
   }
   .clock__divider {
     font-size: 4rem;
     padding-bottom: 0.2em;
+    color: white;
   }
 }

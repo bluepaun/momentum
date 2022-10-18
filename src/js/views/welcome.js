@@ -7,7 +7,7 @@ const welcomeTitle = welcomeSection.querySelector("h1");
 const showWelcome = (on, name) => {
   if (on && name) {
     welcomeSection.classList.remove(HIDDEN_CLASSNAME);
-    welcomeTitle.innerText = `Welcome ${name}`;
+    welcomeTitle.innerText = `Welcome, ${name}`;
   } else {
     welcomeSection.classList.add(HIDDEN_CLASSNAME);
   }
@@ -16,10 +16,6 @@ const showWelcome = (on, name) => {
 const assignSection = document.querySelector(".assign");
 const assignForm = assignSection.querySelector("form");
 const assignInput = assignForm.querySelector("input");
-
-assignForm.mycallback = (name) => {
-  callbacks.assigned(name);
-};
 
 const showAssign = (on) => {
   if (on) {
@@ -31,10 +27,9 @@ const showAssign = (on) => {
 
 assignForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const target = event.target;
   const name = assignInput.value;
   assignInput.value = "";
-  target.mycallback(name);
+  callbacks.assigned(name);
 });
 
 const setcallback = (callbackName, func) => {

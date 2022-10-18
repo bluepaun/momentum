@@ -31,9 +31,9 @@ async function setBackground() {
     urls.forEach((url) => {
       const div = document.createElement("div");
       const img = document.createElement("img");
+      background.appendChild(div);
       img.src = url;
       div.appendChild(img);
-      background.appendChild(div);
     });
   }
 
