@@ -1,11 +1,23 @@
+//animation
+/* import anime from "animejs/lib/anime.es.js"; */
+
 //views
 import welcomeSection from "./views/welcome";
 import clockDisplay from "./views/clock";
+import "./views/nav";
 
 //models
 import nameStorage from "./models/nameStorage";
 import getQuote from "./models/quote";
 import "./models/background";
+
+/* anime({ */
+/*   targets: "div", */
+/*   translateX: 250, */
+/*   rotate: "1turn", */
+/*   backgroundColor: "#FFF", */
+/*   duration: 800, */
+/* }); */
 
 if (nameStorage.loadName()) {
   welcomeSection.showWelcome(true, nameStorage.loadName());

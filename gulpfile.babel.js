@@ -60,7 +60,12 @@ const buildScss = () =>
 
 const buildJs = () =>
   browserify(routes.js.src)
-    .transform("babelify", { presets: ["@babel/preset-env"] })
+    .transform("babelify", {
+      presets: ["@babel/preset-env"],
+      /* sourceMaps: true, */
+      global: true,
+      ignore: [/\/node_modules\/(?!animejs\/)/],
+    })
     .bundle()
     .on("error", function (err) {
       console.error(err);
