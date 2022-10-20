@@ -104,12 +104,27 @@ function updateWeather(city, text, icon, temp) {
   ul.appendChild(div);
 }
 
+function updateQuote(text, auth) {
+  ul.innerHTML = "";
+  const div = document.createElement("div");
+  div.classList.add("quote");
+  const h3 = document.createElement("h3");
+  const span = document.createElement("span");
+  h3.innerText = text;
+  span.innerText = auth;
+
+  div.appendChild(h3);
+  div.appendChild(span);
+  ul.appendChild(div);
+}
+
 export default {
   showPanel: showPanel,
   updatePanelData: updatePanelData,
   setPanelTitle: setPanelTitle,
   isShow: isShow,
   updateWeather: updateWeather,
+  updateQuote: updateQuote,
   setCallback: (name, func) => {
     callbacks[name] = func;
   },

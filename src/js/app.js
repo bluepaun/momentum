@@ -9,7 +9,7 @@ import panel from "./views/panel";
 
 //models
 import nameStorage from "./models/nameStorage";
-import getQuote from "./models/quote";
+import quote from "./models/quote";
 import "./models/background";
 import ListStorageClass from "./models/listStorage";
 import weatherModel from "./models/weather";
@@ -41,6 +41,9 @@ showClock();
 let currentMenu = "";
 
 navi.setCallback("selectMenu", (menu) => {
+  if (!nameStorage.loadName()) {
+    return;
+  }
   currentMenu = menu;
   if (menu === "home") {
     const toDos = toDoStorage.loadItems();
@@ -54,7 +57,10 @@ navi.setCallback("selectMenu", (menu) => {
     panel.setPanelTitle(weatherModel.title);
     const { city, text, icon, temp } = weatherModel.getWeather();
     panel.updateWeather(city, text, icon, temp);
-  } else if (menu === "quotes") {
+  } else if (menu === "quote") {
+    panel.setPanelTitle(quote.title);
+    const q = quote.getQuote();
+    panel.updateQuote(q.text, q.author);
   }
   panel.showPanel(true);
 });

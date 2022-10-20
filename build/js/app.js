@@ -1826,6 +1826,10 @@ showClock();
 let currentMenu = "";
 
 _nav.default.setCallback("selectMenu", menu => {
+  if (!_nameStorage.default.loadName()) {
+    return;
+  }
+
   currentMenu = menu;
 
   if (menu === "home") {
@@ -1851,7 +1855,13 @@ _nav.default.setCallback("selectMenu", menu => {
     } = _weather.default.getWeather();
 
     _panel.default.updateWeather(city, text, icon, temp);
-  } else if (menu === "quotes") {}
+  } else if (menu === "quote") {
+    _panel.default.setPanelTitle(_quote.default.title);
+
+    const q = _quote.default.getQuote();
+
+    _panel.default.updateQuote(q.text, q.author);
+  }
 
   _panel.default.showPanel(true);
 });
@@ -2074,22 +2084,25 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _default;
+exports.default = void 0;
 let quotes = [];
 fetch("https://type.fit/api/quotes").then(function (response) {
   return response.json();
 }).then(function (data) {
   quotes = data;
 });
+var _default = {
+  title: "Today's Quote",
+  getQuote: function () {
+    if (quotes.length < 1) {
+      return;
+    }
 
-function _default() {
-  if (quotes.length < 1) {
-    return;
+    const num = Math.floor(Math.random() * quotes.length);
+    return quotes[num];
   }
-
-  const num = Math.floor(Math.random() * quotes.length);
-  return quotes[num];
-}
+};
+exports.default = _default;
 
 },{}],7:[function(require,module,exports){
 "use strict";
@@ -2517,12 +2530,26 @@ function updateWeather(city, text, icon, temp) {
   ul.appendChild(div);
 }
 
+function updateQuote(text, auth) {
+  ul.innerHTML = "";
+  const div = document.createElement("div");
+  div.classList.add("quote");
+  const h3 = document.createElement("h3");
+  const span = document.createElement("span");
+  h3.innerText = text;
+  span.innerText = auth;
+  div.appendChild(h3);
+  div.appendChild(span);
+  ul.appendChild(div);
+}
+
 var _default = {
   showPanel: showPanel,
   updatePanelData: updatePanelData,
   setPanelTitle: setPanelTitle,
   isShow: isShow,
   updateWeather: updateWeather,
+  updateQuote: updateQuote,
   setCallback: (name, func) => {
     callbacks[name] = func;
   }

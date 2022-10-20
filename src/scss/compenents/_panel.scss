@@ -148,6 +148,31 @@ $red: #e11c3e;
         /* box-shadow: 0 0 30px 20px rgba(0, 0, 0, 0.3); */
       }
     }
+
+    .quote {
+      background-color: white;
+      display: flex;
+      height: 9em;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 0em 1.5em;
+      h3 {
+        font-size: 1.3em;
+        text-align: center;
+        &::before,
+        &::after {
+          content: '"';
+          padding: 0 0.2em;
+          font-size: 1.4em;
+          color: $red;
+        }
+      }
+      span {
+        font-size: 0.8em;
+        color: #aaaaaa;
+      }
+    }
   }
 
   footer {

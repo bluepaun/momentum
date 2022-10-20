@@ -7,11 +7,14 @@ fetch("https://type.fit/api/quotes")
     quotes = data;
   });
 
-export default function () {
-  if (quotes.length < 1) {
-    return;
-  }
+export default {
+  title: "Today's Quote",
+  getQuote: function () {
+    if (quotes.length < 1) {
+      return;
+    }
 
-  const num = Math.floor(Math.random() * quotes.length);
-  return quotes[num];
-}
+    const num = Math.floor(Math.random() * quotes.length);
+    return quotes[num];
+  },
+};
