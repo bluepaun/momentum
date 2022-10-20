@@ -1773,13 +1773,17 @@ var _welcome = _interopRequireDefault(require("./views/welcome"));
 
 var _clock = _interopRequireDefault(require("./views/clock"));
 
-require("./views/nav");
+var _nav = _interopRequireDefault(require("./views/nav"));
+
+var _panel = _interopRequireDefault(require("./views/panel"));
 
 var _nameStorage = _interopRequireDefault(require("./models/nameStorage"));
 
 var _quote = _interopRequireDefault(require("./models/quote"));
 
 require("./models/background");
+
+var _listStorage = _interopRequireDefault(require("./models/listStorage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1788,20 +1792,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* import anime from "animejs/lib/anime.es.js"; */
 //views
 //models
+const toDoStorage = new _listStorage.default("todos", "Today To Do List");
+const weekStorage = new _listStorage.default("weeks", "This Week List");
 
-/* anime({ */
-
-/*   targets: "div", */
-
-/*   translateX: 250, */
-
-/*   rotate: "1turn", */
-
-/*   backgroundColor: "#FFF", */
-
-/*   duration: 800, */
-
-/* }); */
 if (_nameStorage.default.loadName()) {
   _welcome.default.showWelcome(true, _nameStorage.default.loadName());
 } else {
@@ -1828,8 +1821,77 @@ function showClock() {
 
 setInterval(showClock, 1000);
 showClock();
+let currentMenu = "";
 
-},{"./models/background":3,"./models/nameStorage":4,"./models/quote":5,"./views/clock":7,"./views/nav":8,"./views/welcome":9}],3:[function(require,module,exports){
+_nav.default.setCallback("selectMenu", menu => {
+  currentMenu = menu;
+
+  if (menu === "home") {
+    const toDos = toDoStorage.loadItems();
+
+    _panel.default.setPanelTitle(toDoStorage.title);
+
+    _panel.default.updatePanelData(toDos);
+  } else if (menu === "week") {
+    const weeks = weekStorage.loadItems();
+
+    _panel.default.setPanelTitle(weekStorage.title);
+
+    _panel.default.updatePanelData(weeks);
+  } else if (menu === "voca") {} else if (menu === "quotes") {}
+
+  _panel.default.showPanel(true);
+});
+
+_nav.default.setCallback("disableMenu", () => {
+  _panel.default.showPanel(false);
+});
+
+_nav.default.setCallback("plusItem", text => {
+  if (!_panel.default.isShow()) {
+    return;
+  }
+
+  if (currentMenu === "home") {
+    toDoStorage.saveItem({
+      id: Date.now(),
+      text: text,
+      checked: false
+    });
+
+    _panel.default.updatePanelData(toDoStorage.loadItems());
+  } else if (currentMenu === "week") {
+    weekStorage.saveItem({
+      id: Date.now(),
+      text: text,
+      checked: false
+    });
+
+    _panel.default.updatePanelData(weekStorage.loadItems());
+  }
+});
+
+_panel.default.setCallback("deleteItem", id => {
+  if (currentMenu === "home") {
+    toDoStorage.deleteItem(id);
+  } else if (currentMenu === "week") {
+    weekStorage.deleteItem(id);
+  }
+});
+
+_panel.default.setCallback("checkItem", (id, checked) => {
+  if (currentMenu === "home") {
+    toDoStorage.updateItem(id, {
+      checked: checked
+    });
+  } else if (currentMenu === "week") {
+    weekStorage.updateItem(id, {
+      checked: checked
+    });
+  }
+});
+
+},{"./models/background":3,"./models/listStorage":4,"./models/nameStorage":5,"./models/quote":6,"./views/clock":8,"./views/nav":9,"./views/panel":10,"./views/welcome":11}],3:[function(require,module,exports){
 "use strict";
 
 const dog_url = "https://dog.ceo/api/breeds/image/random";
@@ -1852,7 +1914,6 @@ async function getCat() {
 
 async function setBackground() {
   function drawImage(res) {
-    console.dir(res);
     const dogs = res[0];
     const cats = res[1];
     const background = document.querySelector(".background");
@@ -1888,6 +1949,81 @@ var _storageClass = _interopRequireDefault(require("./storageClass"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+class ListStorage {
+  constructor(name, title) {
+    this._storage = new _storageClass.default(name);
+    this._list = [];
+    this.title = title;
+  }
+
+  typeCheck(data) {
+    return data.id !== undefined && data.text !== undefined && data.checked !== undefined;
+  }
+
+  saveItem(data) {
+    if (!this.typeCheck(data)) {
+      return;
+    }
+
+    this._list.push(data);
+
+    this._storage.saveData(this._list);
+  }
+
+  loadItems() {
+    if (this._list.length === 0) {
+      this._list = this._storage.loadData();
+
+      if (this._list === null) {
+        this._list = [];
+      }
+    }
+
+    return this._list;
+  }
+
+  updateItem(id, data) {
+    const index = this._list.findIndex(e => e.id === id);
+
+    if (index < 0) {
+      return;
+    }
+
+    for (const [k, v] of Object.entries(data)) {
+      this._list[index][k] = v;
+    }
+
+    this._storage.saveData(this._list);
+  }
+
+  deleteItem(id) {
+    const index = this._list.findIndex(e => e.id === id);
+
+    if (index < 0) {
+      return;
+    }
+
+    this._list.splice(index, 1);
+
+    this._storage.saveData(this._list);
+  }
+
+}
+
+exports.default = ListStorage;
+
+},{"./storageClass":7}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _storageClass = _interopRequireDefault(require("./storageClass"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const storage = new _storageClass.default("username");
 
 const saveName = name => {
@@ -1904,7 +2040,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{"./storageClass":6}],5:[function(require,module,exports){
+},{"./storageClass":7}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1927,7 +2063,7 @@ function _default() {
   return quotes[num];
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1935,7 +2071,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-//@ts-ignore @ts-nocheck
 class _default {
   constructor(keyname) {
     this._keyname = keyname;
@@ -1954,7 +2089,7 @@ class _default {
 
 exports.default = _default;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2058,7 +2193,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2072,13 +2207,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const nav = document.querySelector("nav");
 const buttons = nav.querySelectorAll("button:not(.plus)");
+const plusbtn = nav.querySelector(".plus");
+const plusInputBox = nav.querySelector(".input-box");
+const inputForm = plusInputBox.querySelector("form");
+const inputText = inputForm.querySelector("input");
 const callbacks = {
-  selectMenu: function (menu) {
-    console.log(menu);
-  },
-  disableMenu: function () {
-    console.log("disable");
-  }
+  selectMenu: function (menu) {},
+  disableMenu: function () {},
+  plusItem: function (item) {}
 };
 buttons.forEach(button => {
   button.addEventListener("click", e => {
@@ -2108,6 +2244,63 @@ buttons.forEach(button => {
     });
   });
 });
+
+function showInputBox(on) {
+  if (on) {
+    inputText.disabled = false;
+    (0, _animeEs.default)({
+      targets: "nav .input-box",
+      top: "-170%",
+      duration: 600
+    });
+  } else {
+    inputText.disabled = true;
+    (0, _animeEs.default)({
+      targets: "nav .input-box",
+      top: "100%",
+      duration: 600
+    });
+  }
+}
+
+function changePlusBtnState(on) {
+  if (on) {
+    (0, _animeEs.default)({
+      targets: "nav .plus i",
+      rotate: 360 + 45,
+      duration: 600
+    });
+    plusbtn.dataset.menu = "cancel";
+  } else {
+    (0, _animeEs.default)({
+      targets: "nav .plus i",
+      rotate: -360,
+      duration: 600
+    });
+    plusbtn.dataset.menu = "plus";
+  }
+}
+
+plusbtn.addEventListener("click", e => {
+  const state = e.target.dataset.menu;
+
+  if (state === "plus") {
+    changePlusBtnState(true);
+    showInputBox(true);
+    inputText.focus();
+  } else {
+    changePlusBtnState(false);
+    showInputBox(false);
+  }
+});
+inputForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const text = inputText.value;
+  callbacks.plusItem(text);
+  inputText.value = "";
+  changePlusBtnState(false);
+  showInputBox(false);
+});
 var _default = {
   setCallback: function (name, func) {
     callbacks[name] = func;
@@ -2115,7 +2308,126 @@ var _default = {
 };
 exports.default = _default;
 
-},{"animejs/lib/anime.es.js":1}],9:[function(require,module,exports){
+},{"animejs/lib/anime.es.js":1}],10:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _animeEs = _interopRequireDefault(require("animejs/lib/anime.es.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const panel = document.querySelector(".panel");
+const titleHeader = panel.querySelector("header");
+const ul = panel.querySelector("ul");
+let currentShowing = false;
+const callbacks = {
+  deleteItem: id => {},
+  checkItem: (id, checked) => {}
+};
+
+function setPanelTitle(title) {
+  titleHeader.innerText = title;
+}
+
+function createListItem(data) {
+  const li = document.createElement("li");
+  const input = document.createElement("input");
+  const label = document.createElement("label");
+  const checkIcon = document.createElement("i");
+  const span = document.createElement("span");
+  const button = document.createElement("button");
+  const trashIcon = document.createElement("i");
+  span.innerText = data.text;
+  checkIcon.classList.add("bx");
+  checkIcon.classList.add("bx-check");
+  label.setAttribute("for", data.id);
+  input.setAttribute("type", "checkbox");
+  input.setAttribute("id", data.id);
+  input.checked = data.checked;
+  input.addEventListener("click", e => {
+    const id = e.target.id;
+    const checked = e.target.checked;
+    callbacks.checkItem(parseInt(id), checked);
+  });
+  trashIcon.classList.add("bx");
+  trashIcon.classList.add("bx-trash");
+  button.appendChild(trashIcon);
+  button.addEventListener("click", e => {
+    const label = e.target.parentElement;
+    const li = label.parentElement;
+    const id = label.attributes.for.value;
+    callbacks.deleteItem(parseInt(id));
+    (0, _animeEs.default)({
+      targets: li,
+      translateX: 100000,
+      duration: 600,
+      complete: function (anim) {
+        li.remove();
+      }
+    });
+  });
+  li.appendChild(input);
+  label.appendChild(checkIcon);
+  label.appendChild(span);
+  label.appendChild(button);
+  li.appendChild(label);
+  return li;
+}
+
+function updatePanelData(datas) {
+  ul.innerHTML = "";
+  datas.forEach(data => {
+    const li = createListItem(data);
+    ul.appendChild(li);
+  });
+}
+
+function isShow() {
+  return currentShowing;
+}
+
+function showPanel(on) {
+  currentShowing = on;
+
+  if (on) {
+    (0, _animeEs.default)({
+      targets: ".panel",
+      bottom: "4rem"
+    });
+  } else {
+    (0, _animeEs.default)({
+      targets: ".panel",
+      bottom: "-100%"
+    });
+  }
+}
+
+const testdatas = [{
+  id: 123,
+  text: "hello test 1",
+  checked: false
+}, {
+  id: 220,
+  text: "hello test 2",
+  checked: true
+}];
+updatePanelData(testdatas);
+var _default = {
+  showPanel: showPanel,
+  updatePanelData: updatePanelData,
+  setPanelTitle: setPanelTitle,
+  isShow: isShow,
+  setCallback: (name, func) => {
+    callbacks[name] = func;
+  }
+};
+exports.default = _default;
+
+},{"animejs/lib/anime.es.js":1}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

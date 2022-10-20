@@ -1,5 +1,3 @@
-//@ts-ignore @ts-nocheck
-
 export default class {
   constructor(keyname) {
     this._keyname = keyname;

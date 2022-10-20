@@ -5,10 +5,11 @@ $red: #e11c3e;
   max-width: 30em;
   font-size: 1.2em;
   $side-padding: 1em;
-  top: 100%;
+  bottom: -100%;
   left: 50%;
   transform: translateX(-50%);
   header {
+    color: $red;
     margin: 0 $side-padding;
     background-color: white;
     border-top: 1em solid $red;
@@ -21,7 +22,7 @@ $red: #e11c3e;
 
   ul {
     padding: 0 $side-padding;
-    height: 20em;
+    max-height: 20em;
     overflow: scroll;
     li {
       background-color: white;
@@ -53,7 +54,7 @@ $red: #e11c3e;
         padding-left: 3rem;
         height: 100%;
         color: #2d3436;
-        i {
+        & > i {
           position: absolute;
           left: 0.5rem;
           top: 0em;
@@ -88,24 +89,41 @@ $red: #e11c3e;
           left: 0;
           right: 100%;
           top: 50%;
-          /* visibility: hidden; */
           opacity: 0;
           transition: opacity 0.3s ease-in-out;
         }
-      }
-      &::after {
-        content: "";
-        position: absolute;
-        width: 0;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        background-color: $red;
-        transition: 0.3s ease-in-out;
+        &::after {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          background-color: $red;
+          transition: 0.3s ease-in-out;
+        }
+        button {
+          position: absolute;
+          top: 50%;
+          right: 1rem;
+          transform: translateY(-50%);
+          background: transparent;
+          font-size: 1.3rem;
+          color: #aaaaaa;
+          cursor: pointer;
+          transition: color 0.3s ease-in-out;
+          &:hover {
+            color: $red;
+          }
+          i {
+            pointer-events: none;
+          }
+        }
       }
       &:hover {
         transform: translateX(-$side-padding);
-        &::after {
+        label::after {
           width: 3px;
         }
       }

@@ -19,7 +19,6 @@ async function getCat(page = 1) {
 
 async function setBackground() {
   function drawImage(res) {
-    console.dir(res);
     const dogs = res[0];
     const cats = res[1];
     const background = document.querySelector(".background");
