@@ -93,7 +93,7 @@ function updateWeather(city, text, icon, temp) {
   h3.innerText = city;
   const iconImg = document.createElement("img");
   if (icon !== undefined) {
-    iconImg.src = `http://openweathermap.org/img/wn/${icon}@4x.png`;
+    iconImg.src = `https://openweathermap.org/img/wn/${icon}@4x.png`;
   }
   const describtion = document.createElement("span");
   describtion.innerText = `${text}, ${temp}℃`;
