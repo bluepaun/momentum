@@ -85,26 +85,31 @@ function showPanel(on) {
   }
 }
 
-const testdatas = [
-  {
-    id: 123,
-    text: "hello test 1",
-    checked: false,
-  },
-  {
-    id: 220,
-    text: "hello test 2",
-    checked: true,
-  },
-];
+function updateWeather(city, text, icon, temp) {
+  ul.innerHTML = "";
+  const div = document.createElement("div");
+  div.classList.add("weather");
+  const h3 = document.createElement("h3");
+  h3.innerText = city;
+  const iconImg = document.createElement("img");
+  if (icon !== undefined) {
+    iconImg.src = `http://openweathermap.org/img/wn/${icon}@4x.png`;
+  }
+  const describtion = document.createElement("span");
+  describtion.innerText = `${text}, ${temp}℃`;
 
-updatePanelData(testdatas);
+  div.appendChild(h3);
+  div.appendChild(iconImg);
+  div.appendChild(describtion);
+  ul.appendChild(div);
+}
 
 export default {
   showPanel: showPanel,
   updatePanelData: updatePanelData,
   setPanelTitle: setPanelTitle,
   isShow: isShow,
+  updateWeather: updateWeather,
   setCallback: (name, func) => {
     callbacks[name] = func;
   },

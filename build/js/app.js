@@ -1785,6 +1785,8 @@ require("./models/background");
 
 var _listStorage = _interopRequireDefault(require("./models/listStorage"));
 
+var _weather = _interopRequireDefault(require("./models/weather"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //animation
@@ -1838,7 +1840,18 @@ _nav.default.setCallback("selectMenu", menu => {
     _panel.default.setPanelTitle(weekStorage.title);
 
     _panel.default.updatePanelData(weeks);
-  } else if (menu === "voca") {} else if (menu === "quotes") {}
+  } else if (menu === "weather") {
+    _panel.default.setPanelTitle(_weather.default.title);
+
+    const {
+      city,
+      text,
+      icon,
+      temp
+    } = _weather.default.getWeather();
+
+    _panel.default.updateWeather(city, text, icon, temp);
+  } else if (menu === "quotes") {}
 
   _panel.default.showPanel(true);
 });
@@ -1891,7 +1904,22 @@ _panel.default.setCallback("checkItem", (id, checked) => {
   }
 });
 
-},{"./models/background":3,"./models/listStorage":4,"./models/nameStorage":5,"./models/quote":6,"./views/clock":8,"./views/nav":9,"./views/panel":10,"./views/welcome":11}],3:[function(require,module,exports){
+_weather.default.setCallback("onUpdateWeather", weather => {
+  if (currentMenu !== "weather") {
+    return;
+  }
+
+  const {
+    city,
+    text,
+    icon,
+    temp
+  } = weather;
+
+  _panel.default.updateWeather(city, text, icon, temp);
+});
+
+},{"./models/background":3,"./models/listStorage":4,"./models/nameStorage":5,"./models/quote":6,"./models/weather":8,"./views/clock":9,"./views/nav":10,"./views/panel":11,"./views/welcome":12}],3:[function(require,module,exports){
 "use strict";
 
 const dog_url = "https://dog.ceo/api/breeds/image/random";
@@ -2096,6 +2124,69 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+const API_KEY = "d3266cfba0c5344764223d0179b3c0f5";
+const API_KEY2 = "62b2f952a4bc5d135f7767b59ec51095";
+const site = "https://api.openweathermap.org/data/2.5/weather";
+const callbacks = {
+  onUpdateWeather: weather => {}
+};
+const curPosition = {};
+const weatherData = {};
+
+function updateWeather() {
+  if (curPosition.lat === undefined || curPosition.lon === undefined) {
+    return;
+  }
+
+  const lat = curPosition.lat;
+  const lon = curPosition.lon;
+  fetch(`${site}?lat=${lat}&lon=${lon}&appid=${API_KEY}`).then(res => res.json()).then(data => {
+    const city = data.name;
+    const text = data.weather[0].main;
+    const icon = data.weather[0].icon;
+    const temp = data.main.temp;
+    weatherData.city = city;
+    weatherData.text = text;
+    weatherData.icon = icon;
+    weatherData.temp = (parseInt(temp) - 273.15).toFixed(1);
+    callbacks.onUpdateWeather(weatherData);
+  });
+}
+
+function onGeoOk(position) {
+  const {
+    coords: {
+      latitude: lat,
+      longitude: lon
+    }
+  } = position;
+  curPosition.lat = lat;
+  curPosition.lon = lon;
+  updateWeather();
+}
+
+function onGeoError() {}
+
+navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError);
+var _default = {
+  title: "Today weather",
+  setCallback: (name, func) => {
+    callbacks[name] = func;
+  },
+  getWeather: () => {
+    updateWeather();
+    return weatherData;
+  }
+};
+exports.default = _default;
+
+},{}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -2193,7 +2284,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2308,7 +2399,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{"animejs/lib/anime.es.js":1}],10:[function(require,module,exports){
+},{"animejs/lib/anime.es.js":1}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2406,28 +2497,39 @@ function showPanel(on) {
   }
 }
 
-const testdatas = [{
-  id: 123,
-  text: "hello test 1",
-  checked: false
-}, {
-  id: 220,
-  text: "hello test 2",
-  checked: true
-}];
-updatePanelData(testdatas);
+function updateWeather(city, text, icon, temp) {
+  ul.innerHTML = "";
+  const div = document.createElement("div");
+  div.classList.add("weather");
+  const h3 = document.createElement("h3");
+  h3.innerText = city;
+  const iconImg = document.createElement("img");
+
+  if (icon !== undefined) {
+    iconImg.src = `http://openweathermap.org/img/wn/${icon}@4x.png`;
+  }
+
+  const describtion = document.createElement("span");
+  describtion.innerText = `${text}, ${temp}℃`;
+  div.appendChild(h3);
+  div.appendChild(iconImg);
+  div.appendChild(describtion);
+  ul.appendChild(div);
+}
+
 var _default = {
   showPanel: showPanel,
   updatePanelData: updatePanelData,
   setPanelTitle: setPanelTitle,
   isShow: isShow,
+  updateWeather: updateWeather,
   setCallback: (name, func) => {
     callbacks[name] = func;
   }
 };
 exports.default = _default;
 
-},{"animejs/lib/anime.es.js":1}],11:[function(require,module,exports){
+},{"animejs/lib/anime.es.js":1}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

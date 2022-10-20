@@ -12,6 +12,7 @@ import nameStorage from "./models/nameStorage";
 import getQuote from "./models/quote";
 import "./models/background";
 import ListStorageClass from "./models/listStorage";
+import weatherModel from "./models/weather";
 
 const toDoStorage = new ListStorageClass("todos", "Today To Do List");
 const weekStorage = new ListStorageClass("weeks", "This Week List");
@@ -49,7 +50,10 @@ navi.setCallback("selectMenu", (menu) => {
     const weeks = weekStorage.loadItems();
     panel.setPanelTitle(weekStorage.title);
     panel.updatePanelData(weeks);
-  } else if (menu === "voca") {
+  } else if (menu === "weather") {
+    panel.setPanelTitle(weatherModel.title);
+    const { city, text, icon, temp } = weatherModel.getWeather();
+    panel.updateWeather(city, text, icon, temp);
   } else if (menu === "quotes") {
   }
   panel.showPanel(true);
@@ -95,4 +99,12 @@ panel.setCallback("checkItem", (id, checked) => {
   } else if (currentMenu === "week") {
     weekStorage.updateItem(id, { checked: checked });
   }
+});
+
+weatherModel.setCallback("onUpdateWeather", (weather) => {
+  if (currentMenu !== "weather") {
+    return;
+  }
+  const { city, text, icon, temp } = weather;
+  panel.updateWeather(city, text, icon, temp);
 });
