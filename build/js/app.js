@@ -2061,12 +2061,25 @@ exports.default = _default;
 },{}],8:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _animeEs = _interopRequireDefault(require("animejs/lib/anime.es.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const nav = document.querySelector("nav");
 const buttons = nav.querySelectorAll("button:not(.plus)");
+const callbacks = {
+  selectMenu: function (menu) {
+    console.log(menu);
+  },
+  disableMenu: function () {
+    console.log("disable");
+  }
+};
 buttons.forEach(button => {
   button.addEventListener("click", e => {
     const x = e.target.offsetLeft;
@@ -2078,6 +2091,7 @@ buttons.forEach(button => {
         opacity: "0",
         duration: 600
       });
+      callbacks.disableMenu();
       return true;
     }
 
@@ -2085,7 +2099,7 @@ buttons.forEach(button => {
       btn.classList.remove("active");
     });
     e.target.classList.add("active");
-    console.log(_animeEs.default);
+    callbacks.selectMenu(e.target.dataset.menu);
     (0, _animeEs.default)({
       targets: "nav .effect",
       left: `${x}px`,
@@ -2094,6 +2108,12 @@ buttons.forEach(button => {
     });
   });
 });
+var _default = {
+  setCallback: function (name, func) {
+    callbacks[name] = func;
+  }
+};
+exports.default = _default;
 
 },{"animejs/lib/anime.es.js":1}],9:[function(require,module,exports){
 "use strict";

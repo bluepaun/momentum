@@ -3,6 +3,15 @@ import anime from "animejs/lib/anime.es.js";
 const nav = document.querySelector("nav");
 const buttons = nav.querySelectorAll("button:not(.plus)");
 
+const callbacks = {
+  selectMenu: function (menu) {
+    console.log(menu);
+  },
+  disableMenu: function () {
+    console.log("disable");
+  },
+};
+
 buttons.forEach((button) => {
   button.addEventListener("click", (e) => {
     const x = e.target.offsetLeft;
@@ -13,6 +22,7 @@ buttons.forEach((button) => {
         opacity: "0",
         duration: 600,
       });
+      callbacks.disableMenu();
       return true;
     }
 
@@ -20,7 +30,7 @@ buttons.forEach((button) => {
       btn.classList.remove("active");
     });
     e.target.classList.add("active");
-    console.log(anime);
+    callbacks.selectMenu(e.target.dataset.menu);
     anime({
       targets: "nav .effect",
       left: `${x}px`,
@@ -29,3 +39,9 @@ buttons.forEach((button) => {
     });
   });
 });
+
+export default {
+  setCallback: function (name, func) {
+    callbacks[name] = func;
+  },
+};

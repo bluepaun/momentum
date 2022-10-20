@@ -1,0 +1,123 @@
+$red: #e11c3e;
+.panel {
+  position: absolute;
+  width: 100%;
+  max-width: 30em;
+  font-size: 1.2em;
+  $side-padding: 1em;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  header {
+    margin: 0 $side-padding;
+    background-color: white;
+    border-top: 1em solid $red;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
+    padding: 1em;
+    text-align: center;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  ul {
+    padding: 0 $side-padding;
+    height: 20em;
+    overflow: scroll;
+    li {
+      background-color: white;
+      height: 3em;
+      /* padding: 0 1em; */
+      transition: transform 0.3s ease-in-out;
+      input[type="checkbox"] {
+        position: absolute;
+        width: 0;
+        height: 0;
+        visibility: hidden;
+
+        &:checked {
+          & + label {
+            color: #aaaaaa;
+            span:after,
+            i {
+              /* visibility: visible; */
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-left: 3rem;
+        height: 100%;
+        color: #2d3436;
+        i {
+          position: absolute;
+          left: 0.5rem;
+          top: 0em;
+          font-size: 2.5em;
+          color: $red;
+          opacity: 0;
+          /* visibility: hidden; */
+          transition: opacity 0.3s ease-in-out;
+        }
+        &::before {
+          content: "";
+          width: 1em;
+          height: 1em;
+          border: 2px solid #cccccc;
+          border-radius: 30%;
+          position: absolute;
+          left: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        span {
+          position: relative;
+          display: block;
+        }
+
+        span::after {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          background-color: #aaaaaa;
+          left: 0;
+          right: 100%;
+          top: 50%;
+          /* visibility: hidden; */
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+        }
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background-color: $red;
+        transition: 0.3s ease-in-out;
+      }
+      &:hover {
+        transform: translateX(-$side-padding);
+        &::after {
+          width: 3px;
+        }
+      }
+    }
+  }
+
+  footer {
+    background-color: white;
+    padding: 1em;
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+    border-top: 1px solid #eeeeee;
+    margin: 0 $side-padding;
+  }
+}
