@@ -23,7 +23,14 @@ $red: #e11c3e;
   ul {
     padding: 0 $side-padding;
     max-height: 20em;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
     li {
       background-color: white;
       height: 3em;
