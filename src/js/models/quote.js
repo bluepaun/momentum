@@ -1,11 +1,13 @@
 let quote = null;
-const api = 'https://zenquotes.io/api/today';
-const proxy = 'https://thingproxy.freeboard.io/fetch/';
-fetch(proxy + api)
+// const api = 'https://zenquotes.io/api/today';
+// const proxy = 'https://thingproxy.freeboard.io/fetch/';
+const api2 = 'https://api.breakingbadquotes.xyz/v1/quotes';
+fetch(api2)
   .then(function (response) {
     return response.json();
   })
   .then(function (data) {
+    console.log(data);
     quote = data[0];
   });
 
@@ -16,6 +18,6 @@ export default {
       return { text: 'No quote found', author: '' };
     }
 
-    return { text: quote.q, author: quote.a };
+    return { text: quote.quote, author: quote.author };
   },
 };
