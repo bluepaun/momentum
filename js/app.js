@@ -2085,12 +2085,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-let quote = null;
-const api = 'https://zenquotes.io/api/today';
-const proxy = 'https://thingproxy.freeboard.io/fetch/';
-fetch(proxy + api).then(function (response) {
+let quote = null; // const api = 'https://zenquotes.io/api/today';
+// const proxy = 'https://thingproxy.freeboard.io/fetch/';
+
+const api2 = 'https://api.breakingbadquotes.xyz/v1/quotes';
+fetch(api2).then(function (response) {
   return response.json();
 }).then(function (data) {
+  console.log(data);
   quote = data[0];
 });
 var _default = {
@@ -2104,8 +2106,8 @@ var _default = {
     }
 
     return {
-      text: quote.q,
-      author: quote.a
+      text: quote.quote,
+      author: quote.author
     };
   }
 };
