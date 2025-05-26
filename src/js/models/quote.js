@@ -13,7 +13,7 @@ export default {
   title: "Today's Quote",
   getQuote: function () {
     if (quote === null) {
-      return 'No quote found';
+      return { text: 'No quote found', author: '' };
     }
 
     return { text: quote.q, author: quote.a };
