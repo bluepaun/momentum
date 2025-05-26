@@ -1794,8 +1794,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /* import anime from "animejs/lib/anime.es.js"; */
 //views
 //models
-const toDoStorage = new _listStorage.default("todos", "Today To Do List");
-const weekStorage = new _listStorage.default("weeks", "This Week List");
+const toDoStorage = new _listStorage.default('todos', 'Today To Do List');
+const weekStorage = new _listStorage.default('weeks', 'This Week List');
 
 if (_nameStorage.default.loadName()) {
   _welcome.default.showWelcome(true, _nameStorage.default.loadName());
@@ -1803,7 +1803,7 @@ if (_nameStorage.default.loadName()) {
   _welcome.default.showAssign(true);
 }
 
-_welcome.default.setcallback("assigned", name => {
+_welcome.default.setcallback('assigned', name => {
   _nameStorage.default.saveName(name);
 
   _welcome.default.showAssign(false);
@@ -1823,28 +1823,28 @@ function showClock() {
 
 setInterval(showClock, 1000);
 showClock();
-let currentMenu = "";
+let currentMenu = '';
 
-_nav.default.setCallback("selectMenu", menu => {
+_nav.default.setCallback('selectMenu', menu => {
   if (!_nameStorage.default.loadName()) {
     return;
   }
 
   currentMenu = menu;
 
-  if (menu === "home") {
+  if (menu === 'home') {
     const toDos = toDoStorage.loadItems();
 
     _panel.default.setPanelTitle(toDoStorage.title);
 
     _panel.default.updatePanelData(toDos);
-  } else if (menu === "week") {
+  } else if (menu === 'week') {
     const weeks = weekStorage.loadItems();
 
     _panel.default.setPanelTitle(weekStorage.title);
 
     _panel.default.updatePanelData(weeks);
-  } else if (menu === "weather") {
+  } else if (menu === 'weather') {
     _panel.default.setPanelTitle(_weather.default.title);
 
     const {
@@ -1855,7 +1855,7 @@ _nav.default.setCallback("selectMenu", menu => {
     } = _weather.default.getWeather();
 
     _panel.default.updateWeather(city, text, icon, temp);
-  } else if (menu === "quote") {
+  } else if (menu === 'quote') {
     _panel.default.setPanelTitle(_quote.default.title);
 
     const q = _quote.default.getQuote();
@@ -1866,16 +1866,16 @@ _nav.default.setCallback("selectMenu", menu => {
   _panel.default.showPanel(true);
 });
 
-_nav.default.setCallback("disableMenu", () => {
+_nav.default.setCallback('disableMenu', () => {
   _panel.default.showPanel(false);
 });
 
-_nav.default.setCallback("plusItem", text => {
+_nav.default.setCallback('plusItem', text => {
   if (!_panel.default.isShow()) {
     return;
   }
 
-  if (currentMenu === "home") {
+  if (currentMenu === 'home') {
     toDoStorage.saveItem({
       id: Date.now(),
       text: text,
@@ -1883,7 +1883,7 @@ _nav.default.setCallback("plusItem", text => {
     });
 
     _panel.default.updatePanelData(toDoStorage.loadItems());
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.saveItem({
       id: Date.now(),
       text: text,
@@ -1894,28 +1894,28 @@ _nav.default.setCallback("plusItem", text => {
   }
 });
 
-_panel.default.setCallback("deleteItem", id => {
-  if (currentMenu === "home") {
+_panel.default.setCallback('deleteItem', id => {
+  if (currentMenu === 'home') {
     toDoStorage.deleteItem(id);
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.deleteItem(id);
   }
 });
 
-_panel.default.setCallback("checkItem", (id, checked) => {
-  if (currentMenu === "home") {
+_panel.default.setCallback('checkItem', (id, checked) => {
+  if (currentMenu === 'home') {
     toDoStorage.updateItem(id, {
       checked: checked
     });
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.updateItem(id, {
       checked: checked
     });
   }
 });
 
-_weather.default.setCallback("onUpdateWeather", weather => {
-  if (currentMenu !== "weather") {
+_weather.default.setCallback('onUpdateWeather', weather => {
+  if (currentMenu !== 'weather') {
     return;
   }
 
@@ -2085,21 +2085,25 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-let quotes = [];
-fetch("https://type.fit/api/quotes").then(function (response) {
+let quote = null;
+const api = 'https://zenquotes.io/api/today';
+const proxy = 'https://thingproxy.freeboard.io/fetch/';
+fetch(proxy + api).then(function (response) {
   return response.json();
 }).then(function (data) {
-  quotes = data;
+  quote = data[0];
 });
 var _default = {
   title: "Today's Quote",
   getQuote: function () {
-    if (quotes.length < 1) {
-      return;
+    if (quote === null) {
+      return 'No quote found';
     }
 
-    const num = Math.floor(Math.random() * quotes.length);
-    return quotes[num];
+    return {
+      text: quote.q,
+      author: quote.a
+    };
   }
 };
 exports.default = _default;

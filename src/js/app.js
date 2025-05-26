@@ -2,20 +2,20 @@
 /* import anime from "animejs/lib/anime.es.js"; */
 
 //views
-import welcomeSection from "./views/welcome";
-import clockDisplay from "./views/clock";
-import navi from "./views/nav";
-import panel from "./views/panel";
+import welcomeSection from './views/welcome';
+import clockDisplay from './views/clock';
+import navi from './views/nav';
+import panel from './views/panel';
 
 //models
-import nameStorage from "./models/nameStorage";
-import quote from "./models/quote";
-import "./models/background";
-import ListStorageClass from "./models/listStorage";
-import weatherModel from "./models/weather";
+import nameStorage from './models/nameStorage';
+import quote from './models/quote';
+import './models/background';
+import ListStorageClass from './models/listStorage';
+import weatherModel from './models/weather';
 
-const toDoStorage = new ListStorageClass("todos", "Today To Do List");
-const weekStorage = new ListStorageClass("weeks", "This Week List");
+const toDoStorage = new ListStorageClass('todos', 'Today To Do List');
+const weekStorage = new ListStorageClass('weeks', 'This Week List');
 
 if (nameStorage.loadName()) {
   welcomeSection.showWelcome(true, nameStorage.loadName());
@@ -23,7 +23,7 @@ if (nameStorage.loadName()) {
   welcomeSection.showAssign(true);
 }
 
-welcomeSection.setcallback("assigned", (name) => {
+welcomeSection.setcallback('assigned', (name) => {
   nameStorage.saveName(name);
   welcomeSection.showAssign(false);
   welcomeSection.showWelcome(true, nameStorage.loadName());
@@ -38,26 +38,26 @@ function showClock() {
 setInterval(showClock, 1000);
 showClock();
 
-let currentMenu = "";
+let currentMenu = '';
 
-navi.setCallback("selectMenu", (menu) => {
+navi.setCallback('selectMenu', (menu) => {
   if (!nameStorage.loadName()) {
     return;
   }
   currentMenu = menu;
-  if (menu === "home") {
+  if (menu === 'home') {
     const toDos = toDoStorage.loadItems();
     panel.setPanelTitle(toDoStorage.title);
     panel.updatePanelData(toDos);
-  } else if (menu === "week") {
+  } else if (menu === 'week') {
     const weeks = weekStorage.loadItems();
     panel.setPanelTitle(weekStorage.title);
     panel.updatePanelData(weeks);
-  } else if (menu === "weather") {
+  } else if (menu === 'weather') {
     panel.setPanelTitle(weatherModel.title);
     const { city, text, icon, temp } = weatherModel.getWeather();
     panel.updateWeather(city, text, icon, temp);
-  } else if (menu === "quote") {
+  } else if (menu === 'quote') {
     panel.setPanelTitle(quote.title);
     const q = quote.getQuote();
     panel.updateQuote(q.text, q.author);
@@ -65,23 +65,23 @@ navi.setCallback("selectMenu", (menu) => {
   panel.showPanel(true);
 });
 
-navi.setCallback("disableMenu", () => {
+navi.setCallback('disableMenu', () => {
   panel.showPanel(false);
 });
 
-navi.setCallback("plusItem", (text) => {
+navi.setCallback('plusItem', (text) => {
   if (!panel.isShow()) {
     return;
   }
 
-  if (currentMenu === "home") {
+  if (currentMenu === 'home') {
     toDoStorage.saveItem({
       id: Date.now(),
       text: text,
       checked: false,
     });
     panel.updatePanelData(toDoStorage.loadItems());
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.saveItem({
       id: Date.now(),
       text: text,
@@ -91,24 +91,24 @@ navi.setCallback("plusItem", (text) => {
   }
 });
 
-panel.setCallback("deleteItem", (id) => {
-  if (currentMenu === "home") {
+panel.setCallback('deleteItem', (id) => {
+  if (currentMenu === 'home') {
     toDoStorage.deleteItem(id);
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.deleteItem(id);
   }
 });
 
-panel.setCallback("checkItem", (id, checked) => {
-  if (currentMenu === "home") {
+panel.setCallback('checkItem', (id, checked) => {
+  if (currentMenu === 'home') {
     toDoStorage.updateItem(id, { checked: checked });
-  } else if (currentMenu === "week") {
+  } else if (currentMenu === 'week') {
     weekStorage.updateItem(id, { checked: checked });
   }
 });
 
-weatherModel.setCallback("onUpdateWeather", (weather) => {
-  if (currentMenu !== "weather") {
+weatherModel.setCallback('onUpdateWeather', (weather) => {
+  if (currentMenu !== 'weather') {
     return;
   }
   const { city, text, icon, temp } = weather;

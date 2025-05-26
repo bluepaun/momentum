@@ -1,20 +1,21 @@
-let quotes = [];
-fetch("https://type.fit/api/quotes")
+let quote = null;
+const api = 'https://zenquotes.io/api/today';
+const proxy = 'https://thingproxy.freeboard.io/fetch/';
+fetch(proxy + api)
   .then(function (response) {
     return response.json();
   })
   .then(function (data) {
-    quotes = data;
+    quote = data[0];
   });
 
 export default {
   title: "Today's Quote",
   getQuote: function () {
-    if (quotes.length < 1) {
-      return;
+    if (quote === null) {
+      return 'No quote found';
     }
 
-    const num = Math.floor(Math.random() * quotes.length);
-    return quotes[num];
+    return { text: quote.q, author: quote.a };
   },
 };
